@@ -1,19 +1,4 @@
 ################################################################################################
-## createReqData()
-################################################################################################
-## If the reqData object (data frame containining posix conformant timepoints and the required 
-## date range) is not present the function will create it
-################################################################################################
-  if(!exists("reqData")){{
-    print("WWWWWWWWW")
-    if(file.exists('reqData.txt')){}else{ 
-      extractData() }
-    reqData<-read.table('reqData.txt',header=TRUE,sep=";",na.strings="?")}
-    reqData<-cols2posix() }
-  reqData
-
-
-################################################################################################
 ## extractData()
 ################################################################################################
 ## Function extracts the required data from the household_power_consumption.txt file, which is
@@ -25,7 +10,7 @@
 extractData<-function(dataFile = "household_power_consumption.txt", outPutFile = "reqData.txt",regX = "'^(1|2)/2/2007'"){
 # get the operating system type
   OSis<-.Platform$OS.type
-# if *nix type, use sysytem calls to head and grep to construct required dataset
+# if *nix type, use system calls to head and grep to construct required dataset
     if(OSis == "unix"){
         command1<-paste("head -1",dataFile,">",outPutFile)
         command2<-paste("grep -E ",regX,dataFile,">>",outPutFile)
@@ -34,14 +19,14 @@ extractData<-function(dataFile = "household_power_consumption.txt", outPutFile =
     }else{
 # Other OS read the entire data set      
       houseData<-read.table("household_power_consumption.txt",header=TRUE,sep=";",na.strings="?")
-# search for the two dates
+# search for the two dates; create logical vector identifying conformant rows 
       rightDate1<-(houseData$Date=="1/2/2007")
       rightDate2<-(houseData$Date=="2/2/2007")
       rightDate<-as.logical(rightDate1+rightDate2)
-
+# use logical vector to extract rows 
       req<-houseData[rightDate,]
       print(head(req))
-#      req[,-1]
+# write the required data to a file
       write.table(req,outPutFile,sep=";",row.names=F)
     }   
 }
@@ -53,14 +38,23 @@ extractData<-function(dataFile = "household_power_consumption.txt", outPutFile =
 ## date object, replaces columns 1 and 2 with a single "TimePt" column
 ################################################################################################
 cols2posix<-function(){
-  reqData<-read.table('reqData.txt',header=TRUE,sep=";",na.strings="?")
-  z <- strptime(as.character(paste(reqData[,1],reqData[,2])), "%d/%m/%Y %H:%M:%OS")
-  reqData<-reqData[,-(1:2)]
-  cols<-colnames(reqData)
+# read in the date filtered data  
+  rD<-read.table('reqData.txt',header=TRUE,sep=";",na.strings="?")
+# concatenate the Date and Time entries and convert to  POSIX1t/POSIXct objects 
+  z <- strptime(as.character(paste(rD[,1],rD[,2])), "%d/%m/%Y %H:%M:%OS")
+# remove the Date Time columns from dataframe
+  rD<-rD[,-(1:2)]
+print(dim(rD))
+# get column names and prepend the label TimePt
+  cols<-colnames(rD)
   cols<-c("TimePt",cols)
-  reqData<-cbind(z,reqData)
-  colnames(reqData)<-cols
-  reqData  
+  print(cols)
+# bind the vector of POSIX1t/POSIXct objects to left hand column
+  rD<-cbind(z,rD)
+#revise the column names
+  colnames(rD)<-cols
+#return revised dataframe
+  rD 
 }
 
 
@@ -72,7 +66,6 @@ cols2posix<-function(){
 ################################################################################################
 createReqData<-function(){
   if(!exists("reqData")){{
-    print("WWWWWWWWW")
     if(file.exists('reqData.txt')){}else{ 
       extractData() }
     reqData<-read.table('reqData.txt',header=TRUE,sep=";",na.strings="?")}
