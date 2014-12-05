@@ -1,20 +1,21 @@
 ## Notes on the plotting scripts
   
-The scripts assume that : 
+The scripts assume that :  
 1)  the original data has been unzipped to 'household_power_consumption.txt'  
 2)  the data file is present in the working directory.  
-  
-The scripts utilise the script CodeFlow.R which ensures that a correctly  
-formatted data frame containing the date filtered data is available.
-
-CodeFlow.R sources the script Code.R which contains functions to detect the  
-presence of the appropriate data frame and generates it if not present.  
 
 Each of the plotX.R scripts can be called to generate the corresponding  
 plotX.png file
 
+The extraction of data required is presented as a horrible kludge, due to  
+the requirement that only the scripts plot(1-4).R be examined in the evaluation  
+phase.  
 
-
+The entire code block to the call to png()  can be replaced by the line
+"source("CodeFlow.R")", which will examine the environment for the  
+appropriately filtered and reformatted data frame, and efficiently  
+generate it if it is not present. 
+  
 
 
 
