@@ -1,0 +1,5 @@
+source("Code.R")
+createReqData()
+png("plot1.png",width = 480,height = 480,units = "px")
+hist(reqData[,2],col="red",xlab = "Global active Power (kilowatts)",main = "Global Active Power")
+dev.off()

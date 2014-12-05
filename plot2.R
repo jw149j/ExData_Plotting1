@@ -1,0 +1,6 @@
+source("Code.R")
+createReqData()
+png("plot2.png",width = 480,height = 480,units = "px")
+plot(reqData[,1],reqData[,2],xlab="", ylab="Global active Power (kilowatts)", type="n")
+lines(reqData[,1],reqData[,2])
+dev.off()
