@@ -25,7 +25,6 @@ extractData<-function(dataFile = "household_power_consumption.txt", outPutFile =
       rightDate<-as.logical(rightDate1+rightDate2)
 # use logical vector to extract rows 
       req<-houseData[rightDate,]
-      print(head(req))
 # write the required data to a file
       write.table(req,outPutFile,sep=";",row.names=F)
     }   
@@ -44,11 +43,9 @@ cols2posix<-function(){
   z <- strptime(as.character(paste(rD[,1],rD[,2])), "%d/%m/%Y %H:%M:%OS")
 # remove the Date Time columns from dataframe
   rD<-rD[,-(1:2)]
-print(dim(rD))
 # get column names and prepend the label TimePt
   cols<-colnames(rD)
   cols<-c("TimePt",cols)
-  print(cols)
 # bind the vector of POSIX1t/POSIXct objects to left hand column
   rD<-cbind(z,rD)
 #revise the column names

@@ -1,5 +1,4 @@
 source("CodeFlow.R")
-#createReqData()
 png("plot4.png",width = 480,height = 480,units = "px")
 par(mfcol = c(2, 2))
 plot(reqData[,1],reqData[,2],xlab="", ylab="Global active Power (kilowatts)", type="n")

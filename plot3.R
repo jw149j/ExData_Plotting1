@@ -1,5 +1,4 @@
 source("CodeFlow.R")
-#createReqData()
 png("plot3.png",width = 480,height = 480,units = "px")
 plot(reqData[,1],reqData[,6],xlab="", ylab="Energy sub metering", type="n")
 lines(reqData[,1],reqData[,6])
